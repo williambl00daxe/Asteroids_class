@@ -1,11 +1,13 @@
 # Write your code here :-)
+# Write your code here :-)
 
 import math
+import random
 
 WIDTH = 800
 HEIGHT = 500
 
-alien = Actor('space_ship',center=(WIDTH/2,HEIGHT/2))
+alien = Actor('spaceship2',center=(WIDTH/2,HEIGHT/2))
 
 global alien_x
 global alien_y
@@ -27,14 +29,25 @@ bullet_radius = 5
 asteroid_radius = 50
 asteroid_color = (255,0,0)
 
+ast_angle = random.randint(0,180)
 asteroids.append({'asteroid_x':100,
                   'asteroid_y':100,
                   'asteroid_color':asteroid_color,
-                  'asteroid_radius':asteroid_radius})
+                  'asteroid_radius':asteroid_radius,
+                  'asteroid_angle':ast_angle})
+ast_angle = random.randint(0,180)
 asteroids.append({'asteroid_x':700,
                   'asteroid_y':100,
                   'asteroid_color':asteroid_color,
-                  'asteroid_radius':asteroid_radius})
+                  'asteroid_radius':asteroid_radius,
+                  'asteroid_angle':ast_angle})
+
+ast_angle = random.randint(0,180)
+asteroids.append({'asteroid_x':500,
+                  'asteroid_y':100,
+                  'asteroid_color':asteroid_color,
+                  'asteroid_radius':asteroid_radius,
+                  'asteroid_angle':ast_angle})
 
 
 def draw():
@@ -62,7 +75,7 @@ def update(dt):
     global bullets
     global bullet_time_between_shots
     global bullet_timer
-
+    asteroidspeed = 100
 
     bullet_speed = 500
     bullet_timer += dt
@@ -82,6 +95,15 @@ def update(dt):
                            'y':alien.pos[1],
                            'angle':alien.angle,
                            'time_left':4})
+
+
+    for asteroid in asteroids.copy():
+        asteroid['asteroid_x'] -= math.sin(asteroid['asteroid_angle']*(math.pi/180))*asteroidspeed*dt
+        asteroid['asteroid_y'] -= math.cos(asteroid['asteroid_angle']*(math.pi/180))*asteroidspeed*dt
+        asteroid['asteroid_x'] %= WIDTH
+        asteroid['asteroid_y'] %= HEIGHT
+
+
 
 
     for bullet in bullets.copy():
@@ -117,8 +139,7 @@ def update(dt):
     if alien.left > WIDTH:
         alien.right = 0
 
-
+#
 
 def bullet_hit_asteroid(b_x,b_y,b_radius,a_x,a_y,a_radius):
     return (b_x - a_x)**2 + (b_y - a_y)**2 <= (b_radius + a_radius)**2
-
